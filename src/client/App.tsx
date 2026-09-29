@@ -83,10 +83,10 @@ const HomePage: React.FC<HomePageProps> = ({ onJoinRoom }) => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 py-8 overflow-hidden">
+    <div className="home-page-root relative min-h-screen flex items-center justify-center px-4 py-8 overflow-hidden">
       {/* Layered background — pure CSS, no extra elements */}
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="home-bg-layer absolute inset-0 pointer-events-none"
         style={{
           background:
             "radial-gradient(ellipse 70% 55% at 15% 12%, rgba(229,57,53,0.13) 0%, transparent 60%)," +
@@ -98,7 +98,7 @@ const HomePage: React.FC<HomePageProps> = ({ onJoinRoom }) => {
       />
 
       {/* Centered content */}
-      <div className="relative z-10 flex flex-col items-center gap-6 w-full max-w-sm animate-pop-in">
+      <div className="home-card-wrapper relative z-10 flex flex-col items-center gap-6 w-full max-w-sm animate-pop-in">
 
         {/* ── Hero ── */}
         <div className="flex flex-col items-center gap-4">
@@ -138,12 +138,12 @@ const HomePage: React.FC<HomePageProps> = ({ onJoinRoom }) => {
 
           <div className="text-center">
             <h1
-              className="text-5xl font-black tracking-tight leading-none ludo-title-gradient-2"
+              className="home-title text-5xl font-black tracking-tight leading-none ludo-title-gradient-2"
               style={{ fontFamily: "'Poppins', sans-serif" }}
             >
               LUDO
             </h1>
-            <p className="text-sm text-slate-400 mt-2 font-medium">
+            <p className="home-subtitle text-sm text-slate-400 mt-2 font-medium">
               The classic board game — now online!
             </p>
             <div className="flex items-center justify-center gap-2 mt-2">
@@ -156,7 +156,7 @@ const HomePage: React.FC<HomePageProps> = ({ onJoinRoom }) => {
         </div>
 
         {/* ── Form Card ── */}
-        <div className="flex flex-col gap-4 w-full p-6 rounded-3xl bg-slate-900/95 border-2 border-indigo-500/30 shadow-[0_12px_48px_rgba(0,0,0,0.8),0_0_24px_rgba(99,102,241,0.15)] backdrop-blur-xl">
+        <div className="home-form-card flex flex-col gap-4 w-full p-6 rounded-3xl bg-slate-900/95 border-2 border-indigo-500/30 shadow-[0_12px_48px_rgba(0,0,0,0.8),0_0_24px_rgba(99,102,241,0.15)] backdrop-blur-xl">
           {/* Name field */}
           <div className="flex flex-col gap-1.5 text-left">
             <label className="text-xs font-black uppercase tracking-wider text-slate-200 flex items-center gap-1.5">
@@ -188,7 +188,7 @@ const HomePage: React.FC<HomePageProps> = ({ onJoinRoom }) => {
             <button
               onClick={handleCreateRoom}
               disabled={isCreating}
-              className="flex items-center justify-center gap-2 w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wide transition active:scale-95 disabled:opacity-50 shadow-xl cursor-pointer"
+              className="home-create-btn flex items-center justify-center gap-2 w-full py-4 rounded-2xl font-black text-sm uppercase tracking-wide transition active:scale-95 disabled:opacity-50 shadow-xl cursor-pointer"
               style={{
                 background: isCreating
                   ? "linear-gradient(135deg, #6366f1, #4f46e5)"
@@ -221,7 +221,7 @@ const HomePage: React.FC<HomePageProps> = ({ onJoinRoom }) => {
               />
               <button
                 type="submit"
-                className="flex items-center justify-center px-5 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-2xl border-2 border-indigo-400/40 transition active:scale-95 shadow-lg shadow-indigo-600/30 cursor-pointer"
+                className="home-join-btn flex items-center justify-center px-5 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm rounded-2xl border-2 border-indigo-400/40 transition active:scale-95 shadow-lg shadow-indigo-600/30 cursor-pointer"
                 title="Join Game"
               >
                 <LogIn className="w-5 h-5" />

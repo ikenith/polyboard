@@ -208,7 +208,7 @@ export const ShapePreview: React.FC<ShapePreviewProps> = ({ playerCount, players
       </div>
 
       <div className="text-[11px] text-slate-400 mt-2 font-medium">
-        {count} players joined • Adaptively scaled
+        {players.length} {players.length === 1 ? "player seated" : "players seated"} • Board adapts to the table
       </div>
     </div>
   );

@@ -90,7 +90,7 @@ export const GameView: React.FC<GameViewProps> = ({
   const turnColor = turnColorDef?.primary || "#ef4444";
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-2 sm:px-4 py-2 pb-12 animate-pop-in">
+    <div className="game-shell w-full max-w-7xl mx-auto px-3 sm:px-5 lg:px-8 py-3 sm:py-5 pb-12 animate-pop-in">
       {/* Top Sub-Bar */}
       <div className="flex items-center justify-between w-full px-2 py-1 mb-2">
         <div className="flex items-center gap-2">
@@ -122,23 +122,35 @@ export const GameView: React.FC<GameViewProps> = ({
       </div>
 
       {/* Main Responsive Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-7 items-start">
 
         {/* ── Left Column (lg:col-span-7): Board & Dice Roller ── */}
-        <div className="lg:col-span-7 flex flex-col items-center gap-3">
+        <div className="game-board-column lg:col-span-8 flex flex-col items-center gap-4">
+          <div className="game-board-heading w-full max-w-[680px] flex items-end justify-between gap-4 px-1">
+            <div>
+              <p className="game-eyebrow">Live match</p>
+              <h1 className="game-heading">Make your move</h1>
+            </div>
+            <div className="game-rule-chip hidden sm:flex">
+              <span className="game-rule-dot" style={{ backgroundColor: turnColor }} />
+              {gameState.settings.teamsEnabled ? "Team rules" : "Classic rules"}
+            </div>
+          </div>
           {/* Central Board */}
-          <div className="w-full flex justify-center">
-            <BoardRenderer
-              gameState={gameState}
-              myPlayerId={myPlayerId}
-              legalActions={legalActions}
-              onMoveToken={onMoveToken}
-            />
+          <div className="game-board-stage w-full flex flex-col items-center">
+            <div className="game-board-canvas w-full flex justify-center">
+              <BoardRenderer
+                gameState={gameState}
+                myPlayerId={myPlayerId}
+                legalActions={legalActions}
+                onMoveToken={onMoveToken}
+              />
+            </div>
           </div>
 
           {/* Dice Roller Tray */}
-          <div className="w-full flex justify-center">
-            <div className="flex flex-col items-center p-3 rounded-3xl bg-slate-900/95 border-2 border-slate-800 shadow-[0_8px_32px_rgba(0,0,0,0.6),0_0_20px_rgba(245,158,11,0.08)] backdrop-blur-xl w-full max-w-sm">
+          <div className="game-dice-rail w-full flex justify-center">
+            <div className="game-dice-panel flex flex-col items-center p-3 sm:p-4 rounded-3xl w-full max-w-md">
               <DiceRoller
                 currentRoll={gameState.currentDiceRoll}
                 lastRoll={gameState.lastDiceRoll}
@@ -154,7 +166,7 @@ export const GameView: React.FC<GameViewProps> = ({
         </div>
 
         {/* ── Right Column (lg:col-span-5): Turn Banner, Players, Log ── */}
-        <div className="lg:col-span-5 flex flex-col gap-3">
+        <div className="game-sidebar lg:col-span-4 flex flex-col gap-3">
 
           {/* Turn Banner with Timer Bar */}
           <div
@@ -282,10 +294,13 @@ export const GameView: React.FC<GameViewProps> = ({
             />
           </div>
 
-          {/* Game Log Card */}
-          <GameLog logs={room.logs} />
         </div>
       </div>
+
+      {/* Quiet live feed: available at a glance without competing with the board. */}
+      <aside className="game-log-dock" aria-label="Game log">
+        <GameLog logs={room.logs} />
+      </aside>
 
       {/* Game Over Modal */}
       {room.status === "GAME_OVER" && (

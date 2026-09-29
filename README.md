@@ -27,16 +27,15 @@ npm test
 ```
 
 ### 4. Run Locally
-To test the complete stack locally (Vite frontend + Cloudflare Worker with SQLite Durable Objects & WebSockets):
+To test the complete stack locally (frontend + Cloudflare Worker with SQLite Durable Objects & WebSockets):
 
 ```bash
-# Build frontend and launch the Cloudflare local runtime:
-npm run build
-npx wrangler dev
+# Build the frontend and launch the Cloudflare local runtime:
+npm run dev
 ```
 Open **`http://localhost:8787`** in your browser (or multiple private/incognito windows to test multiplayer).
 
-*(Optional: for rapid frontend hot-module reloading during UI tweaks, run `npm run dev` in one terminal and `npx wrangler dev` in another).*
+For rapid frontend-only UI work, use `npm run dev:ui` in one terminal and `npx wrangler dev` in another. The UI server proxies `/api` and WebSocket traffic to the Worker on port 8787.
 
 ### 5. Deploy to Cloudflare (Free Plan)
 Authenticate once with Cloudflare, then deploy:

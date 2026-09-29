@@ -4,7 +4,8 @@
   "description": "Multiplayer board game web app with procedural polygon boards, Ludo, teams, anti-cheat, and Cloudflare Workers Durable Objects.",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "npm run build && wrangler dev",
+    "dev:ui": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest run",

@@ -50,12 +50,157 @@ export interface BoardGeometry {
   centerGoals: Record<number, CellCoord>; // key: armIndex
 }
 
+function generateClassicSquareGeometry(): BoardGeometry {
+  const cellSize = 60;
+  const boardOffset = 50;
+  const center = { x: 500, y: 500 };
+  const pointFor = (column: number, row: number): Point => ({
+    x: boardOffset + (column + 0.5) * cellSize,
+    y: boardOffset + (row + 0.5) * cellSize,
+  });
+  const tileFor = (point: Point): Point[] => [
+    { x: point.x - 28, y: point.y - 28 },
+    { x: point.x + 28, y: point.y - 28 },
+    { x: point.x + 28, y: point.y + 28 },
+    { x: point.x - 28, y: point.y + 28 },
+  ];
+
+  // The engine still uses four 13-cell arms; these are their classic clockwise grid coordinates.
+  const ringGrid: [number, number][] = [
+    [6, 0], [7, 0], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [9, 6], [10, 6], [11, 6], [12, 6], [13, 6],
+    [14, 6], [14, 7], [14, 8], [13, 8], [12, 8], [11, 8], [10, 8], [9, 8], [8, 9], [8, 10], [8, 11], [8, 12], [8, 13],
+    [8, 14], [7, 14], [6, 14], [6, 13], [6, 12], [6, 11], [6, 10], [6, 9], [5, 8], [4, 8], [3, 8], [2, 8], [1, 8],
+    [0, 8], [0, 7], [0, 6], [1, 6], [2, 6], [3, 6], [4, 6], [5, 6], [6, 5], [6, 4], [6, 3], [6, 2], [6, 1],
+  ];
+  const homeGrid: [number, number][][] = [
+    [[7, 5], [7, 4], [7, 3], [7, 2], [7, 1]],
+    [[9, 7], [10, 7], [11, 7], [12, 7], [13, 7]],
+    [[7, 9], [7, 10], [7, 11], [7, 12], [7, 13]],
+    [[5, 7], [4, 7], [3, 7], [2, 7], [1, 7]],
+  ];
+  const yardCenters: [number, number][] = [[3, 3], [11, 3], [11, 11], [3, 11]];
+  const trackPolygons: Point[][] = [
+    [{ x: 410, y: 50 }, { x: 590, y: 50 }, { x: 590, y: 410 }, { x: 410, y: 410 }],
+    [{ x: 590, y: 410 }, { x: 950, y: 410 }, { x: 950, y: 590 }, { x: 590, y: 590 }],
+    [{ x: 410, y: 590 }, { x: 590, y: 590 }, { x: 590, y: 950 }, { x: 410, y: 950 }],
+    [{ x: 50, y: 410 }, { x: 410, y: 410 }, { x: 410, y: 590 }, { x: 50, y: 590 }],
+  ];
+  const centerWedges: Point[][] = [
+    [center, { x: 410, y: 410 }, { x: 590, y: 410 }],
+    [center, { x: 590, y: 410 }, { x: 590, y: 590 }],
+    [center, { x: 590, y: 590 }, { x: 410, y: 590 }],
+    [center, { x: 410, y: 590 }, { x: 410, y: 410 }],
+  ];
+
+  const arms: ArmGeometry[] = [];
+  const trackCellsByRingIndex: Record<number, CellCoord> = {};
+  const homeColumnCells: Record<string, CellCoord> = {};
+  const yardSlots: Record<string, CellCoord> = {};
+  const centerGoals: Record<number, CellCoord> = {};
+
+  for (let armIndex = 0; armIndex < 4; armIndex++) {
+    const trackCells: CellCoord[] = [];
+    for (let offset = 0; offset < LUDO_BOARD_CONFIG.CELLS_PER_ARM; offset++) {
+      const ringIndex = armIndex * LUDO_BOARD_CONFIG.CELLS_PER_ARM + offset;
+      const point = pointFor(...ringGrid[ringIndex]);
+      const isStart = offset === LUDO_BOARD_CONFIG.START_CELL_OFFSET;
+      const isStar = offset === LUDO_BOARD_CONFIG.STAR_CELL_OFFSET;
+      const cell: CellCoord = {
+        id: `track_${ringIndex}`,
+        point,
+        radius: 25,
+        type: "track",
+        armIndex,
+        ringIndex,
+        isSafe: isStart || isStar,
+        isStart,
+        isStar,
+        tilePolygon: tileFor(point),
+      };
+      trackCells.push(cell);
+      trackCellsByRingIndex[ringIndex] = cell;
+    }
+
+    const homeCells: CellCoord[] = [];
+    for (let homeIndex = 0; homeIndex < LUDO_BOARD_CONFIG.HOME_COLUMN_LENGTH; homeIndex++) {
+      const point = pointFor(...homeGrid[armIndex][homeIndex]);
+      const cell: CellCoord = {
+        id: `home_col_${armIndex}_${homeIndex}`,
+        point,
+        radius: 25,
+        type: "home_column",
+        armIndex,
+        homeColIndex: homeIndex,
+        isSafe: true,
+        tilePolygon: tileFor(point),
+      };
+      homeCells.push(cell);
+      homeColumnCells[`${armIndex}_${homeIndex}`] = cell;
+    }
+
+    const yardCenter = pointFor(...yardCenters[armIndex]);
+    const slotOffset = 52;
+    const tokenSlots = [
+      { x: yardCenter.x - slotOffset, y: yardCenter.y - slotOffset },
+      { x: yardCenter.x + slotOffset, y: yardCenter.y - slotOffset },
+      { x: yardCenter.x - slotOffset, y: yardCenter.y + slotOffset },
+      { x: yardCenter.x + slotOffset, y: yardCenter.y + slotOffset },
+    ];
+    tokenSlots.forEach((point, yardSlotIndex) => {
+      yardSlots[`${armIndex}_${yardSlotIndex}`] = {
+        id: `yard_${armIndex}_${yardSlotIndex}`,
+        point,
+        radius: 28,
+        type: "yard",
+        armIndex,
+        yardSlotIndex,
+        isSafe: true,
+      };
+    });
+
+    centerGoals[armIndex] = {
+      id: `center_${armIndex}`,
+      point: center,
+      radius: 34,
+      type: "center",
+      armIndex,
+      isSafe: true,
+    };
+
+    arms.push({
+      armIndex,
+      angleRad: (Math.PI / 2) * armIndex - Math.PI / 2,
+      trackCells,
+      homeColumnCells: homeCells,
+      yard: { armIndex, center: yardCenter, boxWidth: 270, boxHeight: 270, tokenSlots },
+      centerWedge: centerWedges[armIndex],
+      centerGoalPoint: center,
+      armTrackPolygon: trackPolygons[armIndex],
+    });
+  }
+
+  return {
+    armCount: 4,
+    viewBox: "0 0 1000 1000",
+    center,
+    arms,
+    trackCellsByRingIndex,
+    homeColumnCells,
+    yardSlots,
+    centerGoals,
+  };
+}
+
 /**
  * Computes procedural geometry for an M-arm Ludo board.
  * N arms, each identical, with a yard, start cell, home column and shared track.
  * One single geometry function for all N.
  */
 export function generateBoardGeometry(armCount: number): BoardGeometry {
+  if (armCount === 4) {
+    return generateClassicSquareGeometry();
+  }
+
   const cx = 500;
   const cy = 500;
   const viewBox = "0 0 1000 1000";

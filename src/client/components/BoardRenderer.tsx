@@ -299,7 +299,7 @@ export const BoardRenderer: React.FC<BoardRendererProps> = ({
   }, [gameState, geo, canMove, myPlayerId, legalMoveTokenIds, animatingPositions]);
 
   return (
-    <div className="relative w-full max-w-[460px] sm:max-w-[480px] max-h-[48vh] sm:max-h-[52vh] aspect-square flex items-center justify-center select-none touch-none mx-auto">
+    <div className="board-renderer relative w-full max-w-[680px] aspect-square flex items-center justify-center select-none touch-none mx-auto">
       <svg
         viewBox={geo.viewBox}
         className="w-full h-full overflow-visible"

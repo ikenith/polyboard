@@ -1,18 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap');
 @import "tailwindcss";
 
 /* ===================== CSS RESET & ROOT VARS ===================== */
 
 :root {
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-heading: 'Poppins', 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-heading: 'Space Grotesk', 'Manrope', sans-serif;
+  --font-mono: 'DM Mono', monospace;
 
-  /* Dark purple palette */
-  --bg: #0a0518;
-  --surface: #120d30;
-  --elevated: #1a1545;
-  --highlight: #251f60;
-  --border: rgba(139, 92, 246, 0.18);
+  /* Ink, parchment, and game-piece colors */
+  --bg: #101416;
+  --surface: #172023;
+  --elevated: #202c2d;
+  --highlight: #2b3a39;
+  --border: rgba(205, 224, 211, 0.16);
   --border-dim: rgba(255, 255, 255, 0.07);
 
   --text: #f8fafc;
@@ -46,12 +47,169 @@ html, body, #root {
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
+  background:
+    radial-gradient(circle at 8% 0%, rgba(224, 164, 75, 0.11), transparent 30rem),
+    radial-gradient(circle at 100% 90%, rgba(38, 136, 129, 0.14), transparent 34rem),
+    var(--bg);
   color: var(--text);
   min-height: 100vh;
   min-height: 100dvh;
   overflow-x: hidden;
   user-select: none;
+}
+
+.game-shell {
+  position: relative;
+}
+
+.game-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image: linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
+}
+
+.game-board-heading {
+  position: relative;
+  z-index: 1;
+}
+
+.game-eyebrow {
+  color: #d7a957;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.game-heading {
+  color: #f7f2e8;
+  font-family: var(--font-heading);
+  font-size: clamp(1.55rem, 3vw, 2.35rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-top: 0.3rem;
+}
+
+.game-rule-chip {
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(215, 169, 87, 0.3);
+  border-radius: 999px;
+  color: #c7d0ca;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  padding: 0.5rem 0.7rem;
+  white-space: nowrap;
+}
+
+.game-rule-dot {
+  border-radius: 999px;
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.08);
+  height: 0.45rem;
+  width: 0.45rem;
+}
+
+.game-board-stage {
+  position: relative;
+  border: 1px solid rgba(236, 225, 198, 0.13);
+  border-radius: 2rem;
+  background: linear-gradient(145deg, rgba(36, 48, 47, 0.82), rgba(15, 21, 22, 0.75));
+  box-shadow: 0 24px 60px rgba(0,0,0,0.3), inset 0 1px rgba(255,255,255,0.08);
+  overflow: hidden;
+  padding: clamp(0.35rem, 1.2vw, 0.9rem);
+}
+
+.game-board-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 80px rgba(6, 10, 10, 0.32);
+}
+
+.game-dice-panel {
+  background: rgba(23, 32, 35, 0.92);
+  border: 1px solid rgba(215, 169, 87, 0.25);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.28), inset 0 1px rgba(255,255,255,0.08);
+}
+
+.game-dice-rail {
+  position: relative;
+  z-index: 3;
+  margin-top: -1.8rem;
+}
+
+.game-log-dock {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 30;
+  width: min(18rem, calc(100vw - 2rem));
+  opacity: 0.94;
+  transform-origin: bottom right;
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.game-log-dock:hover,
+.game-log-dock:focus-within {
+  opacity: 1;
+  transform: translateY(-2px);
+}
+
+.game-log-dock > div {
+  max-height: 10.5rem !important;
+  background: rgba(16, 24, 25, 0.94);
+  border-color: rgba(215, 169, 87, 0.22);
+  box-shadow: 0 16px 38px rgba(0,0,0,0.32), inset 0 1px rgba(255,255,255,0.07);
+}
+
+.game-log-dock > div > div:last-child {
+  max-height: 7.5rem !important;
+}
+
+.game-sidebar {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 1024px) {
+  .game-sidebar {
+    position: sticky;
+    top: 4.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .game-board-stage {
+    border-radius: 1.35rem;
+    padding: 0.35rem;
+  }
+
+  .game-dice-rail {
+    margin-top: -1rem;
+  }
+
+  .game-log-dock {
+    right: 0.65rem;
+    bottom: 0.65rem;
+    width: min(17rem, calc(100vw - 1.3rem));
+  }
+
+  .game-log-dock > div {
+    max-height: 8.5rem !important;
+  }
+
+  .game-log-dock > div > div:last-child {
+    max-height: 5.5rem !important;
+  }
 }
 
 button {
@@ -776,4 +934,154 @@ button:disabled {
 
 .token-progress-bar {
   transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ===================== HOME REFRESH ===================== */
+
+.home-page-root {
+  background:
+    radial-gradient(circle at 18% 15%, rgba(212, 91, 68, 0.16), transparent 24rem),
+    radial-gradient(circle at 90% 82%, rgba(41, 139, 130, 0.18), transparent 28rem),
+    #101416;
+}
+
+.home-bg-layer {
+  opacity: 0;
+}
+
+.home-page-root::before,
+.home-page-root::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  border: 1px solid rgba(244, 235, 216, 0.08);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.home-page-root::before {
+  width: min(70vw, 720px);
+  height: min(70vw, 720px);
+  left: -22vw;
+  top: -26vw;
+}
+
+.home-page-root::after {
+  width: min(54vw, 560px);
+  height: min(54vw, 560px);
+  right: -18vw;
+  bottom: -20vw;
+  border-color: rgba(215, 169, 87, 0.12);
+}
+
+.home-card-wrapper {
+  max-width: 720px;
+  gap: 1.5rem;
+}
+
+.home-hero {
+  align-items: flex-start;
+  width: 100%;
+  gap: 1rem;
+}
+
+.home-title-block {
+  text-align: left;
+}
+
+.home-title {
+  color: #f7f2e8;
+  font-family: var(--font-heading) !important;
+  font-size: clamp(3.2rem, 10vw, 6.2rem) !important;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+}
+
+.home-title::before {
+  content: "POLYBOARD / REALTIME TABLES";
+  display: block;
+  color: #d7a957;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  margin-bottom: 1rem;
+}
+
+.home-subtitle {
+  color: #aebbb5;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  max-width: 25rem;
+}
+
+.home-color-dots {
+  justify-content: flex-start;
+}
+
+.home-form-card {
+  background: rgba(23, 32, 35, 0.88);
+  border: 1px solid rgba(244, 235, 216, 0.15);
+  border-radius: 1.35rem;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.36), inset 0 1px rgba(255,255,255,0.08);
+  padding: clamp(1.15rem, 4vw, 1.8rem);
+}
+
+.home-form-card label {
+  color: #dce5df;
+}
+
+.home-form-card input {
+  background: rgba(10, 15, 16, 0.68);
+  border-color: rgba(222, 235, 225, 0.16);
+  border-radius: 0.8rem;
+}
+
+.home-form-card input:focus {
+  border-color: #d7a957;
+  box-shadow: 0 0 0 3px rgba(215, 169, 87, 0.16);
+}
+
+.home-create-btn {
+  background: #d7a957 !important;
+  border-radius: 0.8rem;
+  box-shadow: 0 10px 26px rgba(215, 169, 87, 0.2) !important;
+  color: #172023 !important;
+}
+
+.home-create-btn:hover:not(:disabled) {
+  background: #ebc477 !important;
+  transform: translateY(-2px);
+}
+
+.home-join-btn {
+  background: #2b8b83 !important;
+  border: 0 !important;
+  border-radius: 0.8rem;
+  box-shadow: 0 10px 24px rgba(43, 139, 131, 0.18) !important;
+}
+
+.home-join-btn:hover {
+  background: #3aa69a !important;
+}
+
+.home-form-card .text-slate-400,
+.home-page-root > p {
+  color: #8d9b95;
+}
+
+@media (min-width: 640px) {
+  .home-card-wrapper {
+    align-items: flex-start;
+  }
+
+  .home-board-icon {
+    align-self: flex-end;
+    margin-bottom: -4rem;
+    margin-right: 1rem;
+    width: 7rem;
+    height: 7rem;
+  }
 }
