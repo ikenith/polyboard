@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { sound } from "../utils/audio";
 
 interface DiceRollerProps {
@@ -99,7 +99,6 @@ export const DiceRoller: React.FC<DiceRollerProps> = ({
   consecutiveSixes = 0,
   onRoll,
 }) => {
-  const [isRollingAnimation, setIsRollingAnimation] = useState(false);
   const prevIsMyTurnCanRoll = useRef(false);
 
   // Play gentle alert chime when your turn to roll arrives
@@ -114,8 +113,6 @@ export const DiceRoller: React.FC<DiceRollerProps> = ({
   const handleClick = () => {
     if (!isMyTurn || !canRoll) return;
     sound.playDiceRoll();
-    setIsRollingAnimation(true);
-    setTimeout(() => setIsRollingAnimation(false), 580);
     onRoll();
   };
 
@@ -127,32 +124,21 @@ export const DiceRoller: React.FC<DiceRollerProps> = ({
     <div className="flex flex-col items-center gap-2.5 w-full max-w-xs px-2 py-1">
       {/* Dice Container / Tray */}
       <div className="relative flex items-center justify-center p-3 rounded-3xl bg-slate-900/60 border border-slate-800/80 shadow-inner">
-        {/* Pulsating golden aura behind dice when it's your turn */}
-        {isInteractive && (
-          <div
-            className="absolute inset-0 rounded-3xl animate-pulse"
-            style={{
-              background: "radial-gradient(circle, rgba(245,158,11,0.35) 0%, transparent 70%)",
-              transform: "scale(1.2)",
-            }}
-          />
-        )}
-
         <button
           onClick={handleClick}
           disabled={!isInteractive}
           aria-label="Roll dice"
-          className={`relative transition-all duration-200 select-none ${
-            isRollingAnimation ? "animate-dice-shake" : ""
-          } ${isInteractive ? "hover:scale-108 active:scale-95 cursor-pointer" : ""}`}
+          className={`relative transition-transform duration-150 select-none ${
+            isInteractive ? "hover:scale-105 active:scale-95 cursor-pointer" : ""
+          }`}
         >
           <DiceFace value={displayRoll} active={!!displayRoll} size={82} />
         </button>
 
         {/* Six badge */}
         {displayRoll === 6 && (
-          <div className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-amber-500 border border-amber-300 flex items-center justify-center shadow-lg animate-bounce-subtle">
-            <span className="text-[10px] font-black text-slate-950 uppercase tracking-wider">6! Again</span>
+          <div className="absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-slate-950 border border-slate-700 flex items-center justify-center shadow-lg">
+            <span className="text-[10px] font-black text-white uppercase tracking-wider">6! Again</span>
           </div>
         )}
       </div>
@@ -161,10 +147,10 @@ export const DiceRoller: React.FC<DiceRollerProps> = ({
       {isInteractive ? (
         <button
           onClick={handleClick}
-          className="w-full py-2.5 px-6 rounded-2xl font-black text-sm uppercase tracking-wider text-slate-950 shadow-xl transition-all duration-150 active:scale-95 flex items-center justify-center gap-2"
+          className="w-full py-2.5 px-6 rounded-2xl font-black text-sm uppercase tracking-wider text-white shadow-xl transition-all duration-150 active:scale-95 flex items-center justify-center gap-2"
           style={{
-            background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)",
-            boxShadow: "0 0 20px rgba(245,158,11,0.5), 0 4px 12px rgba(0,0,0,0.5)",
+            background: "#111827",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.35)",
           }}
         >
           <span className="text-base">🎲</span>
