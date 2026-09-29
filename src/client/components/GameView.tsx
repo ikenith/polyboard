@@ -121,10 +121,26 @@ export const GameView: React.FC<GameViewProps> = ({
         </div>
       </div>
 
+      {/* Dice stays above the board so the primary action is always visible on mobile. */}
+      <div className="game-dice-rail game-dice-rail-top w-full flex justify-center mb-4">
+        <div className="game-dice-panel flex flex-col items-center p-3 sm:p-4 rounded-3xl w-full max-w-md">
+          <DiceRoller
+            currentRoll={gameState.currentDiceRoll}
+            lastRoll={gameState.lastDiceRoll}
+            phase={gameState.phase}
+            canRoll={gameState.canRoll}
+            isMyTurn={isMyTurn}
+            currentTurnPlayerName={currentTurnPlayer?.name || "Player"}
+            consecutiveSixes={gameState.consecutiveSixes}
+            onRoll={onRollDice}
+          />
+        </div>
+      </div>
+
       {/* Main Responsive Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-7 items-start">
 
-        {/* ── Left Column (lg:col-span-7): Board & Dice Roller ── */}
+        {/* ── Left Column: Board ── */}
         <div className="game-board-column lg:col-span-8 flex flex-col items-center gap-4">
           <div className="game-board-heading w-full max-w-[680px] flex items-end justify-between gap-4 px-1">
             <div>
@@ -148,21 +164,6 @@ export const GameView: React.FC<GameViewProps> = ({
             </div>
           </div>
 
-          {/* Dice Roller Tray */}
-          <div className="game-dice-rail w-full flex justify-center">
-            <div className="game-dice-panel flex flex-col items-center p-3 sm:p-4 rounded-3xl w-full max-w-md">
-              <DiceRoller
-                currentRoll={gameState.currentDiceRoll}
-                lastRoll={gameState.lastDiceRoll}
-                phase={gameState.phase}
-                canRoll={gameState.canRoll}
-                isMyTurn={isMyTurn}
-                currentTurnPlayerName={currentTurnPlayer?.name || "Player"}
-                consecutiveSixes={gameState.consecutiveSixes}
-                onRoll={onRollDice}
-              />
-            </div>
-          </div>
         </div>
 
         {/* ── Right Column (lg:col-span-5): Turn Banner, Players, Log ── */}
@@ -294,11 +295,12 @@ export const GameView: React.FC<GameViewProps> = ({
             />
           </div>
 
+          {/* The player list remains below the board controls; the log is last. */}
         </div>
       </div>
 
-      {/* Quiet live feed: available at a glance without competing with the board. */}
-      <aside className="game-log-dock" aria-label="Game log">
+      {/* Quiet live feed stays at the end of the game layout. */}
+      <aside className="game-log-dock game-log-dock-end" aria-label="Game log">
         <GameLog logs={room.logs} />
       </aside>
 

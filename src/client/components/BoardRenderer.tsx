@@ -24,7 +24,10 @@ export function computePathPoints(
 ): Point[] {
   const totalRingCells = armCount * LUDO_BOARD_CONFIG.CELLS_PER_ARM;
   const startRing = armIndex * LUDO_BOARD_CONFIG.CELLS_PER_ARM;
-  const homeEntranceRing = startRing;
+  // A token's distance is measured from its player's start cell, not arm offset 0.
+  // Keeping the entrance aligned here prevents the final lap from skipping the
+  // highlighted start tile before entering the home column.
+  const homeEntranceRing = startRing + LUDO_BOARD_CONFIG.START_CELL_OFFSET;
 
   const points: Point[] = [];
 

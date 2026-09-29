@@ -136,43 +136,35 @@ body {
 }
 
 .game-dice-panel {
-  background: rgba(23, 32, 35, 0.92);
-  border: 1px solid rgba(215, 169, 87, 0.25);
+  background: #0b0b0b;
+  border: 1px solid #343434;
   box-shadow: 0 14px 32px rgba(0,0,0,0.28), inset 0 1px rgba(255,255,255,0.08);
 }
 
 .game-dice-rail {
   position: relative;
   z-index: 3;
-  margin-top: -1.8rem;
+}
+
+.game-dice-rail-top {
+  margin-top: 0;
 }
 
 .game-log-dock {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 30;
-  width: min(18rem, calc(100vw - 2rem));
-  opacity: 0.94;
-  transform-origin: bottom right;
-  transition: opacity 180ms ease, transform 180ms ease;
-}
-
-.game-log-dock:hover,
-.game-log-dock:focus-within {
-  opacity: 1;
-  transform: translateY(-2px);
+  width: 100%;
+  max-width: 42rem;
+  margin: 1.25rem auto 0;
 }
 
 .game-log-dock > div {
-  max-height: 10.5rem !important;
-  background: rgba(16, 24, 25, 0.94);
-  border-color: rgba(215, 169, 87, 0.22);
+  max-height: 12rem !important;
+  background: #0b0b0b;
+  border-color: #343434;
   box-shadow: 0 16px 38px rgba(0,0,0,0.32), inset 0 1px rgba(255,255,255,0.07);
 }
 
 .game-log-dock > div > div:last-child {
-  max-height: 7.5rem !important;
+  max-height: 9rem !important;
 }
 
 .game-sidebar {
@@ -194,13 +186,7 @@ body {
   }
 
   .game-dice-rail {
-    margin-top: -1rem;
-  }
-
-  .game-log-dock {
-    right: 0.65rem;
-    bottom: 0.65rem;
-    width: min(17rem, calc(100vw - 1.3rem));
+    margin-top: 0;
   }
 
   .game-log-dock > div {
